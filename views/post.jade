@@ -1,0 +1,7 @@
+div.row
+        each a in posts
+            div.col-md-4
+                h2!=a.title
+                p
+                  small=a.time.minute
+                p!=a.post 
