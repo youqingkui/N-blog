@@ -24,7 +24,8 @@ Post.prototype.save = function(callback){
     name : this.name,
     title: this.title,
     time : time,
-    post : this.post
+    post : this.post,
+    comments : []
   }
   
   mongodb.open(function(err, db){
@@ -105,6 +106,9 @@ Post.getOne = function(name, day, title, callback){
         }
         if(doc){
           doc.post = markdown.toHTML(doc.post);
+          doc.comments.forEach(function(comment){
+            comment.content = markdown.toHTML(comment.content); 
+          });
           return callback(null, doc);
         }
         return callback(err,null);

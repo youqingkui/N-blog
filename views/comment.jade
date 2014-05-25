@@ -1,0 +1,16 @@
+form(methond='post')
+  if user
+    input(type='text', name='name' value='#{user.name}')
+    br
+    input(type='text', name='email' value='#{user.email}')
+    br
+    input(type='text', name='website' value='/u/#{user.name}')
+    br  
+  else
+    input(type='text', name='name' )
+    input(type='text', name='email')
+    input(type='text', name='website' value='http//:')
+    
+  textarea(name='content', row='5', cols='80')
+  
+  input(type='submit', value="ok")

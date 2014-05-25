@@ -16,6 +16,7 @@
     "mongodb": "*",
     "connect-mongo": "*",
     "connect": "*",
-    "markdown":"*"
+    "markdown":"*",
+    "oss-easy": "*"
   }
 }

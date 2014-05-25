@@ -3,6 +3,7 @@ var router = express.Router();
 var crypto = require('crypto');
 var User   = require('../models/user.js');
 var Post   = require('../models/post.js');
+var Comment = require('../models/comment.js')
 var fs     = require('fs');
 
 
@@ -130,10 +131,26 @@ router.get("/upload", function(req, res){
 });
 
 router.post("/upload", function(req, res){
-  console.log(req.files["myfile"]);
-  var target_path = './public/images/' + "okrename.jpg";
-  fs.renameSync(req.files["myfile"].path, target_path);
+  //console.log(req.files["myfile"]);
+  var path = 'public/images/';
+  var ossName = req.files["myfile"].path.replace(path, '');
+  console.log(ossName);
+  fs.renameSync(req.files["myfile"].path, req.files["myfile"].path);
   console.log("ok");
+  var OssEasy = require("oss-easy");
+  ossOptions = {
+  accessKeyId : "uOaJsZxgxlTbFO3B",
+  accessKeySecret : "wbyU0nQ9wX63OpoOXslLeSpscq9Sdf"
+  }
+  var oss = new OssEasy(ossOptions, "youqingkui");
+  oss.uploadFile(req.files["myfile"].path, ossName, function(err) {
+    if(err){
+      console.log(err);
+    }
+    console.log("oss ok" + req.files["myfile"].name);
+  });
+  req.session.error = "等待回调";
+  return res.redirect("/");
 });
 
 
@@ -170,12 +187,29 @@ router.get("/u/:name/:day/:title", function(req, res){
   });
 });
 
+router.post("/u/:name/:day/:title", function(){
+  var date = new Date(),
+      time = date.getFullYear() + '-' +(date.getMonth + 1) + '-' + date.getDate() + ' '
+  + date.getHours() + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+  
+  var comment = {
+    name : req.body.name,
+    email : req.body.email,
+    website : req.body.website,
+    time : time,
+    content : req.body.content
+  };
+  var newComment = new Comment();
+  
+  
+});
+
 router.get("/edit/:name/:day/:title", function(req, res){
   Post.edit(req.params.name, req.params.day, req.params.title, function(err, post){
     if(err){
       req.session.error = "出现错误";
       return res.redirect("back");
-    }
+    } 
     return res.render("edit", 
       { 
         title : "编辑",
