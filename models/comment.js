@@ -1,10 +1,10 @@
 var mongodb = require('./db');
 
-function Comment(comment){
-  this.name = comment.name;
-  this.time = comment.time;
-  this.title = comment.title;
-  this.comment = comment.comment;
+function Comment(name, day, title, comment){
+  this.name = name;
+  this.day = day;
+  this.title = title;
+  this.comment = comment;
 }
 
 module.exports = Comment;
@@ -26,7 +26,7 @@ Comment.prototype.save = function(callback){
       }
       collection.update({
         "name" : name,
-        "time.day"  : time,
+        "time.day"  : day,
         "title" : title
         
       },{

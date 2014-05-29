@@ -1,4 +1,11 @@
-form(methond='post')
+each c in post.comments
+  div.col-md-4
+    h2= c.name
+    p
+      small= c.time
+    h3!= c.content
+    
+form(method='post')
   if user
     input(type='text', name='name' value='#{user.name}')
     br

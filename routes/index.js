@@ -180,6 +180,7 @@ router.get("/u/:name/:day/:title", function(req, res){
       req.session.error = "没有找到这片文章";
       return res.redirect("/");
     }
+    console.log(posts.comments);
     return res.render("article",{
       title : posts.title,
       post : posts
@@ -187,9 +188,9 @@ router.get("/u/:name/:day/:title", function(req, res){
   });
 });
 
-router.post("/u/:name/:day/:title", function(){
+router.post("/u/:name/:day/:title", function(req, res){
   var date = new Date(),
-      time = date.getFullYear() + '-' +(date.getMonth + 1) + '-' + date.getDate() + ' '
+      time = date.getFullYear() + '-' +(date.getMonth() + 1) + '-' + date.getDate() + ' '
   + date.getHours() + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
   
   var comment = {
@@ -199,7 +200,16 @@ router.post("/u/:name/:day/:title", function(){
     time : time,
     content : req.body.content
   };
-  var newComment = new Comment();
+  var newComment = new Comment(req.body.name, req.params.day, req.params.title, comment);
+  newComment.save(function(err){
+    if(err){
+      req.session.errror = "添加评论出现错误";
+      res.redirect("back");
+    }
+    req.session.success = "添加评论成功";
+    res.redirect("back");
+    
+  });
   
   
 });
